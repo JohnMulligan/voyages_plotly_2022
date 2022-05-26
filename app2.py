@@ -38,18 +38,18 @@ app.layout = dbc.Container(
                 width=4,xs=12,sm=12,md=12,lg=6
             ),
 
-            # dbc.Col(
-            #     html.Div([
-            #         html.Label('Factor'),
-            #         dcc.Dropdown(
-            #             id='scatter_factor',
-            #             options=[{'label':md[i]['flatlabel'],'value':i} for i in scatter_plot_factors],
-            #             value=scatter_plot_factors[0],
-            #             multi=False
-            #         )
-            #     ]),
-            #     width=4,xs=12,sm=12,md=12,lg=6
-            # )
+            dbc.Col(
+                html.Div([
+                    html.Label('Factor'),
+                    dcc.Dropdown(
+                        id='scatter_factor',
+                        options=[{'label':md[i]['flatlabel'],'value':i} for i in scatter_plot_factors],
+                        value=scatter_plot_factors[0],
+                        multi=False
+                    )
+                ]),
+                width=4,xs=12,sm=12,md=12,lg=6
+            )
         ]),
         dbc.Row([
             html.Div([
@@ -73,14 +73,14 @@ app.layout = dbc.Container(
     Output('bar-graph', 'figure'),
     Input('scatter_x_var', 'value'),
     Input('scatter_y_var', 'value'),
-    # Input('scatter_factor', 'value'),
+    Input('scatter_factor', 'value'),
     Input('scatter_agg_mode', 'value')
 )
-def update_bar_graph(x_var, y_var, agg_mode):
+def update_bar_graph(x_var, y_var, factor, agg_mode):
     global md
 
     data={
-        'selected_fields':[x_var, y_var],
+        'selected_fields':[x_var, y_var, factor],
         'cachename':['voyage_xyscatter']
     }
 
@@ -92,22 +92,21 @@ def update_bar_graph(x_var, y_var, agg_mode):
     yvarlabel=md[y_var]['flatlabel']
     xvarlabel=md[x_var]['flatlabel']
 
+
+    colors=df[factor].unique()
+    for color in colors:
+        df2=df[df[factor]==color]
+        trace_name=color
+    
     if agg_mode=='Averages':
-        df2=df.groupby(x_var)[y_var].mean()
+        df2=df.groupby([x_var, factor]).mean()
         df2=df2.reset_index()
-        # df2[factor]=df[factor]
-        # df3=df2.groupby(factor)
+
     elif agg_mode=='Totals/Sums':
-        df2=df.groupby(x_var)[y_var].sum()
+        df2=df.groupby([x_var, factor]).sum()
         df2=df2.reset_index()
-        # df2[factor]=df[factor]
-        # df3=df2.groupby(factor)
 
-    # print('!!!!!!!!!!!!!!!')
-    # print(factor)
-    # print(df2)
-
-    fig = px.scatter(df2, x=x_var, y=y_var,
+    fig = px.scatter(df2, x=x_var, y=y_var, color=factor,
         labels={
             y_var:yvarlabel,
 			x_var:xvarlabel
