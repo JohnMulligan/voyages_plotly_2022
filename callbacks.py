@@ -57,8 +57,8 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		data=data
 	)
 	
-	#clean up for plotly to graph
-	#aggregation step
+	print(df)
+	
 	if agg_mode=='Averages':
 		df2=df.groupby(x_var)[y_var].mean()
 		df2=df2.reset_index()
@@ -66,7 +66,8 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		df2=df.groupby(x_var)[y_var].sum()
 		df2=df2.reset_index()
 	
-	#labels for graphs
+	print(df2)
+	
 	yvarlabel=md[y_var]['flatlabel']
 	xvarlabel=md[x_var]['flatlabel']
 	
@@ -490,6 +491,7 @@ def update_multi_options(autocomplete_field_name):
 
 #from https://dash.plotly.com/dash-core-components/dropdown
 @callback(
+	#the dynamic dropdown is changed based on the letters I type 
     Output("my-multi-dynamic-dropdown", "options"),
 	[Input("my-multi-dynamic-dropdown", "search_value"),
 	Input("autocomplete-field-selector","value"),
@@ -514,7 +516,6 @@ def autocompletion(search_value, field_name,state_value):
 	# "Bight of Biafra and Gulf of Guinea islands", "British Guiana", 
 	# "British Honduras", "California", "Canada", "Chile", "Connecticut",
 	#  "Cuba", "Danish West Indies", "Delaware", "Dominica"], "results_count": 61354}
-	# why stop at Dominica?
 	print(r.text)
 	# {"voyage_itinerary__imp_principal_region_of_slave_purchase__region": 
 	# ["British Guiana", "British Honduras", "Great Britain", "Other Brazil", 
