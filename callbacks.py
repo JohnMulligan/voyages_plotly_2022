@@ -1,3 +1,4 @@
+#from time import clock_getres
 from dash import Input, Output, callback, dash_table,State
 from dash.exceptions import PreventUpdate
 import pandas as pd
@@ -56,6 +57,8 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		data=data
 	)
 	
+	#clean up for plotly to graph
+	#aggregation step
 	if agg_mode=='Averages':
 		df2=df.groupby(x_var)[y_var].mean()
 		df2=df2.reset_index()
@@ -63,9 +66,11 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		df2=df.groupby(x_var)[y_var].sum()
 		df2=df2.reset_index()
 	
+	#labels for graphs
 	yvarlabel=md[y_var]['flatlabel']
 	xvarlabel=md[x_var]['flatlabel']
 	
+	#print('df: ',df,'df2: ',df2)
 	fig=px.bar(df2,x=x_var,y=y_var,
 		labels={
 			y_var:yvarlabel,
@@ -491,12 +496,29 @@ def update_multi_options(autocomplete_field_name):
 	State("my-multi-dynamic-dropdown", "value")]
 )
 def autocompletion(search_value, field_name,state_value):
-	
+	print("🚀 ~ file: callbacks.py ~ line 499 ~ search_value,state_value", search_value,state_value)
+	#🚀 ~ file: callbacks.py ~ line 499 ~ search_value,state_value  []
+	#🚀 ~ file: callbacks.py ~ line 499 ~ search_value,state_value br []
+
+	#callback triggered only by input not state changes. state value is held from output until input is selected	
+
 	#only going to work with a single field for now
 	varname=field_name
 	data={varname: [search_value] if search_value else ['']}
+	print("🌱 ~ file: callbacks.py ~ line 503 ~ data", data)
 	r=requests.post(url=base_url+'voyage/autocomplete',headers=headers,data=data)
-	#print(r.text)
+	# when data is [''], r.text =
+	# {"voyage_itinerary__imp_principal_region_of_slave_purchase__region": 
+	# ["Amazonia", "Americas", "Anguilla", "Antigua", "Asia e Africa", 
+	# "Bahamas", "Bahia", "Barbados", "Bight of Benin", 
+	# "Bight of Biafra and Gulf of Guinea islands", "British Guiana", 
+	# "British Honduras", "California", "Canada", "Chile", "Connecticut",
+	#  "Cuba", "Danish West Indies", "Delaware", "Dominica"], "results_count": 61354}
+	# why stop at Dominica?
+	print(r.text)
+	# {"voyage_itinerary__imp_principal_region_of_slave_purchase__region": 
+	# ["British Guiana", "British Honduras", "Great Britain", "Other Brazil", 
+	# "Other British Caribbean", "Southeast Brazil"], "results_count": 10933}
 	j=json.loads(r.text)
 	autocomplete_results=[
 		{"label":i,"value":i} for i in j[varname]
