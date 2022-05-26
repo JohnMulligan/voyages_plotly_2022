@@ -24,7 +24,7 @@ registered_apps=[
 
 app.layout =  dbc.Container(
 	[	
-		dcc.Store(id="search_params"),
+		dcc.Store(id="search_params"),			# store the search parameter for different graphs
 		dcc.Location(id="url"),
 		dbc.Row([
 			dbc.Col(
