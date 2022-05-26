@@ -10,6 +10,7 @@ import json
 from app_secrets import *
 from tools import *
 
+
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP],suppress_callback_exceptions=True)
 server = app.server
 
@@ -21,6 +22,7 @@ registered_apps=[
 	["pivot_table_layout","Pivot Table Layout"],
 	["leaflet_map","Leaflet map (experimental)"]
 ]
+
 
 app.layout =  dbc.Container(
 	[	
