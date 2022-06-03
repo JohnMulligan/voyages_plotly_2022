@@ -11,7 +11,7 @@ import gc
 from app_secrets import *
 from tools import *
 import dash_leaflet as dl
-
+from geo_code_map import *
 
 def update_df(url,data):
 	global headers
@@ -271,8 +271,8 @@ def pivot_table_update_figure(rows,columns,cells,rmna,valuefunction,search_data)
 def get_leaflet_tiles(tileset_select):
 	return tileset_select
 
-#import voyages_geo_to_geojson_points_dict as vd
-#gd=vd.main()
+import voyages_geo_to_geojson_points_dict as vd
+gd=vd.main()
 
 
 
@@ -385,6 +385,10 @@ def get_leaflet_routes(search_data):
 			sv=int(eval(source))
 			tv=int(eval(target))
 			
+			sv_old=new_to_old_geo_pks[sv]
+			tv_old=new_to_old_geo_pks[tv]
+			
+			
 			#this will fail if there's no lookup for the given port's pk in the json
 			s_reg=str(port_routes['src'][str(sv)]['reg'])
 			t_reg=str(port_routes['dst'][str(tv)]['reg'])
@@ -395,8 +399,8 @@ def get_leaflet_routes(search_data):
 				skipthis=False
 			
 			if not skipthis:
-				s_lon,s_lat=gd[sv]['geometry']['coordinates']
-				t_lon,t_lat=gd[tv]['geometry']['coordinates']
+				s_lon,s_lat=gd[sv_old]['geometry']['coordinates']
+				t_lon,t_lat=gd[tv_old]['geometry']['coordinates']
 				
 				#try to use the routing, but draw a straight line if there is none
 				try:
@@ -407,8 +411,8 @@ def get_leaflet_routes(search_data):
 				
 				v=j[source][target]
 				if v>0:
-					sname=gd[sv]['properties']['name']
-					tname=gd[tv]['properties']['name']
+					sname=gd[sv_old]['properties']['name']
+					tname=gd[tv_old]['properties']['name']
 					text="%s people transported from %s to %s" %(int(v),sname,tname)
 					label="%s --> %s" %(labeltrim(sname),labeltrim(tname))
 					routes_featurecollection['features'].append({

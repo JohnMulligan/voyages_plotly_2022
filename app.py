@@ -18,7 +18,8 @@ registered_apps=[
 	["xyscatter_layout","Scatter and Timeline Graphs"],
 	["bar_layout","Bar Charts"],
 	["donut_layout","Donut Charts"],
-	["pivot_table_layout","Pivot Table Layout"]
+	["pivot_table_layout","Pivot Table Layout"],
+	["leaflet_map","Leaflet map (experimental)"]
 ]
 
 app.layout =  dbc.Container(
