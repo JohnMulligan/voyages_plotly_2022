@@ -6,7 +6,7 @@ def main():
 
 	print("+++FETCHING GEO+++")
 	data={"hierarchical":"False"}
-	r=requests.post(base_url+"voyage/geo",data=data,headers=headers)
+	r=requests.post(base_url+"geo/",data=data,headers=headers)
 	flatgeo=json.loads(r.text)
 	print("+++GEO FETCHED+++")
 	
@@ -29,10 +29,11 @@ def main():
 	
 	for i in flatgeo:
 		for tp in type_prefixes:
-			prefix=type_prefixes[tp]
+			prefix=''
 			geocode=i[prefix+'id']
 			if geocode is None:
 				geocode=default_geocode
+			loc_type=i['location_type__name']
 		
 			longitude=i[prefix+'longitude']
 			latitude=i[prefix+'latitude']
@@ -51,9 +52,9 @@ def main():
 				},
 				"properties": {
 					"class":tp,
-					tp:i[prefix+tp],
-					"name":i[prefix+tp],
-					"id":i[prefix+'id']
+					tp:loc_type,
+					"name":i['name'],
+					"id":i['id']
 				}
 			}
 			for k in [j for j in i if j.startswith(prefix+"show_on")]:

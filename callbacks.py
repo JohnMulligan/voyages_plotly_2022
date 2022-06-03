@@ -56,7 +56,7 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		data=data
 	)
 	
-	print(df)
+	#print(df)
 	
 	if agg_mode=='Averages':
 		df2=df.groupby(x_var)[y_var].mean()
@@ -65,7 +65,7 @@ def update_bar_graph(x_var,y_var,agg_mode,search_data):
 		df2=df.groupby(x_var)[y_var].sum()
 		df2=df2.reset_index()
 	
-	print(df2)
+	#print(df2)
 	
 	yvarlabel=md[y_var]['flatlabel']
 	xvarlabel=md[x_var]['flatlabel']
@@ -239,7 +239,7 @@ def pivot_table_update_figure(rows,columns,cells,rmna,valuefunction,search_data)
 		data[sdk]=search_data[sdk]
 
 	df,results_count=update_df(
-		base_url+'voyage/groupby',
+		base_url+'voyage/crosstabs',
 		data=data
 	)
 	
@@ -271,8 +271,8 @@ def pivot_table_update_figure(rows,columns,cells,rmna,valuefunction,search_data)
 def get_leaflet_tiles(tileset_select):
 	return tileset_select
 
-import voyages_geo_to_geojson_points_dict as vd
-gd=vd.main()
+#import voyages_geo_to_geojson_points_dict as vd
+#gd=vd.main()
 
 
 
@@ -375,7 +375,7 @@ def get_leaflet_routes(search_data):
 		groupbyfield_showonmap_varname=re.sub("__id$","__show_on_map",groupby_field)
 		data[groupbyfield_showonmap_varname]=["True"]
 	
-	r=requests.post(url=base_url+'voyage/groupby',headers=headers,data=data)
+	r=requests.post(url=base_url+'voyage/crosstabs',headers=headers,data=data)
 	j=json.loads(r.text)
 	
 	routes_featurecollection={"type":"FeatureCollection","features":[]}
